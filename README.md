@@ -1,6 +1,9 @@
 # My Security Tool
 Security Tool with various options like fuzzing
 
+## Fuzzing
+Fuzzing is a tool which injects random data into different protocol stacks. Fuzzing is an important technique used in security testing. More information [OWASP Fuzzing](https://owasp.org/www-community/Fuzzing). Here in "My Security Tool" we read a file which contains fuzzing data. This data is read line by line and is appended to the url provided. With the new appended url we make an http call and check if the http call is a success.
+
 # Usage 
 1. Build
    ```
