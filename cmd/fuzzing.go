@@ -14,8 +14,8 @@ import (
 
 var fuzzingCmd = &cobra.Command{
 	Use:   "fuzzing",
-	Short: "fuzzing",
-	Long:  `fuzzing`,
+	Short: "Fuzzing",
+	Long:  `Fuzzing url tool where the file line text will be appended at the end of url.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("fuzzing called")
 

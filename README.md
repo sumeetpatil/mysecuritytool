@@ -9,14 +9,14 @@ Security Tool with various options like fuzzing
 2. Help
    ```
    ./mysecuritytool --help 
-   mysecuritytool
+   My Security Tool contains mutiple security tools like fuzzing
 
    Usage:
-     mysecuritytool [command]
+    mysecuritytool [command]
 
    Available Commands:
      completion  Generate the autocompletion script for the specified shell
-     fuzzing     fuzzing
+     fuzzing     Fuzzing
      help        Help about any command
 
    Flags:
@@ -27,7 +27,7 @@ Security Tool with various options like fuzzing
 3. Fuzzing help
    ```
    ./mysecuritytool fuzzing --help 
-   Fuzzing. The file line text will be added at the end of url.
+   Fuzzing url tool where the file line text will be appended at the end of url.
 
    Usage:
      mysecuritytool fuzzing [flags]

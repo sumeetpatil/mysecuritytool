@@ -8,8 +8,8 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "mysecuritytool",
-	Short: "mysecuritytool",
-	Long:  `mysecuritytool`,
+	Short: "My Security Tool",
+	Long:  `My Security Tool contains mutiple security tools like fuzzing`,
 }
 
 func Execute() {
