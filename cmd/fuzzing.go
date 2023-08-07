@@ -45,6 +45,11 @@ Example:
 			log.Fatalf("error - %s", err.Error())
 		}
 
+		subStringSuccessBody, err := cmd.Flags().GetString("subStringSuccessBody")
+		if err != nil {
+			log.Fatalf("error - %s", err.Error())
+		}
+
 		regex := regexp.MustCompile(pattern)
 
 		file, err := os.Open(filePath)
@@ -59,6 +64,31 @@ Example:
 		for scanner.Scan() {
 			line := scanner.Text()
 
+			// hasUpper := false
+			// hasLower := false
+			// hasSymbol := false
+			// hasDigit := false
+			// for _, r := range line {
+			// 	if unicode.IsUpper(r) {
+			// 		hasUpper = true
+			// 	}
+			// 	if unicode.IsLower(r) {
+			// 		hasLower = true
+			// 	}
+			// 	if unicode.IsDigit(r) {
+			// 		hasDigit = true
+			// 	}
+			// 	if unicode.IsSymbol(r) {
+			// 		hasSymbol = true
+			// 	}
+			// }
+
+			// if hasSymbol == false && hasDigit == true && hasLower == true && hasUpper == true {
+			// 	fmt.Print(line)
+			// } else {
+			// 	continue
+			// }
+
 			headersMap := make(map[string]string)
 			for _, v := range headerArray {
 				headersDataSplit := strings.Split(replaceData(v, line), ":")
@@ -70,10 +100,10 @@ Example:
 
 			if pattern != "" {
 				if regex.MatchString(line) {
-					call(url, line, headersMap, body)
+					call(url, line, headersMap, body, subStringSuccessBody)
 				}
 			} else {
-				call(url, line, headersMap, body)
+				call(url, line, headersMap, body, subStringSuccessBody)
 			}
 		}
 
@@ -89,7 +119,7 @@ func replaceData(data string, fileLineText string) string {
 	return strings.ReplaceAll(data, "{{.fuzz}}", fileLineText)
 }
 
-func call(url string, line string, headersMap map[string]string, body string) {
+func call(url string, line string, headersMap map[string]string, body string, subStringSuccessBody string) {
 	fmt.Println("try for " + line)
 	client := httpclient.NewHttpClient(url, headersMap)
 	httpStatus := httpclient.HttpResp{}
@@ -99,7 +129,12 @@ func call(url string, line string, headersMap map[string]string, body string) {
 		httpStatus = client.Get()
 	}
 
-	if httpStatus.StatusCode == 200 {
+	if subStringSuccessBody != "" && httpStatus.StatusCode == 200 && strings.Contains(body, subStringSuccessBody) {
+		log.Println("Success with " + line)
+		os.Exit(0)
+	}
+
+	if subStringSuccessBody == "" && httpStatus.StatusCode == 200 {
 		log.Println("Success with " + line)
 		os.Exit(0)
 	}
@@ -111,5 +146,6 @@ func init() {
 	fuzzingCmd.Flags().String("url", "", "Url to make call")
 	fuzzingCmd.Flags().StringArrayVar(&headerArray, "header", []string{}, "Headers. Pass mutiple headers like --header 'Cookie: auth_token=test' --header  'Content-Type: application/x-www-form-urlencoded'")
 	fuzzingCmd.Flags().String("regex", "", "Regex in fuzzing file line")
+	fuzzingCmd.Flags().String("subStringSuccessBody", "", "Success body sub string to stop. By default 200 status code would stop. But if you want to add extra check to validate the substring of successBody.")
 	fuzzingCmd.Flags().String("body", "", "Body for post")
 }
