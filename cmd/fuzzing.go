@@ -90,8 +90,7 @@ func replaceData(data string, fileLineText string) string {
 }
 
 func call(url string, line string, headersMap map[string]string, body string) {
-	url = url + line
-	fmt.Println(line)
+	fmt.Println("try for " + line)
 	client := httpclient.NewHttpClient(url, headersMap)
 	httpStatus := httpclient.HttpResp{}
 	if body != "" {
