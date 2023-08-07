@@ -8,7 +8,6 @@ import (
 )
 
 type HttpClient struct {
-	cookie  map[string]string
 	headers map[string]string
 	url     string
 }
@@ -23,8 +22,8 @@ type HttpResp struct {
 	Body       string
 }
 
-func NewHttpClient(url string, cookie map[string]string, headers map[string]string) HttpClient {
-	return HttpClient{url: url, cookie: cookie, headers: headers}
+func NewHttpClient(url string, headers map[string]string) HttpClient {
+	return HttpClient{url: url, headers: headers}
 }
 
 func (httpClient *HttpClient) Get() HttpResp {
@@ -48,10 +47,6 @@ func call(httpClient *HttpClient, body string) HttpResp {
 
 	for k, v := range httpClient.headers {
 		req.Header.Set(k, v)
-	}
-
-	for k, v := range httpClient.cookie {
-		req.AddCookie(&http.Cookie{Name: k, Value: v})
 	}
 
 	client := &http.Client{}

@@ -30,27 +30,30 @@ Fuzzing is a tool which injects random data into different protocol stacks. Fuzz
 3. Fuzzing help
    ```
    ./mysecuritytool fuzzing --help
-   Fuzzing tool where the file line text(generally passwords) will be appended/replaced. You can use {{.fuzz}} as a template where you can replace the passwords. You can use {{.fuzz}} in url, body, cookie or headers of the payload
+   Fuzzing tool where the file line text will be appended/replaced. 
+   You can use {{.fuzz}} as a template where you can replace the passwords. You can use {{.fuzz}} in url, body or headers of the payload.
+
+   Example:
+   ./mysecuritytool fuzzing --file fuzz.txt --url https://your_url?name={{.fuzz}} --header "Cookie: auth_token=test_token"
 
    Usage:
    mysecuritytool fuzzing [flags]
 
    Flags:
-         --body string      Body for post
-         --cookie string    Cookie information
-         --file string      File name used for fuzzing
-         --headers string   Header information. You can pass like Content-Type=application/json;Accept:application/json
-   -h, --help             help for fuzzing
-         --regex string     Regex in fuzzing file line
-         --url string       Url to make call
+         --body string          Body for post
+         --file string          File name used for fuzzing
+         --header stringArray   Headers. Pass mutiple headers like --header 'Cookie:auth_token=test' --header  'Content-Type:application/x-www-form-urlencoded'
+   -h, --help                 help for fuzzing
+         --regex string         Regex in fuzzing file line
+         --url string           Url to make call
    ```
 4. Examples of fuzzing command
    ```
-   ./mysecuritytool fuzzing --file fuzz.txt --url https://URL --cookie "auth_token=test_token" --regex ".inc"
+   ./mysecuritytool fuzzing --file fuzz.txt --url https://URL --header "Cookie: auth_token=test_token" --header "Content-Type: application/x-www-form-urlencoded" --regex ".inc"
 
-   ./mysecuritytool fuzzing --file fuzz.txt --url https://your_url?name={{.fuzz}} --cookie "auth_token=test_token"
+   ./mysecuritytool fuzzing --file fuzz.txt --url https://your_url?name={{.fuzz}} --header "Cookie: auth_token=test_token"
 
-   ./mysecuritytool fuzzing --file fuzz.txt --url https://your_url --body "{\"name\":\"{{.fuzz}}\"}" --cookie "auth_token=test_token"
+   ./mysecuritytool fuzzing --file fuzz.txt --url https://your_url --body "{\"name\":\"{{.fuzz}}\"}" --header "Cookie: auth_token=test_token"
    ```
 
 ### Fuzzing file references 
