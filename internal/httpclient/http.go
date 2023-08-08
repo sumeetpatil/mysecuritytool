@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type HttpClient struct {
 	headers map[string]string
 	url     string
+	timeout int64
 }
 
 type HttpClientHandler interface {
@@ -22,8 +24,8 @@ type HttpResp struct {
 	Body       string
 }
 
-func NewHttpClient(url string, headers map[string]string) HttpClient {
-	return HttpClient{url: url, headers: headers}
+func NewHttpClient(url string, headers map[string]string, timeout int64) HttpClient {
+	return HttpClient{url: url, headers: headers, timeout: timeout}
 }
 
 func (httpClient *HttpClient) Get() HttpResp {
@@ -49,7 +51,9 @@ func call(httpClient *HttpClient, body string) HttpResp {
 		req.Header.Set(k, v)
 	}
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Duration(httpClient.timeout) * time.Second,
+	}
 
 	response, err := client.Do(req)
 	if err != nil {

@@ -35,6 +35,11 @@ Example:
 			log.Fatalf("error - %s", err.Error())
 		}
 
+		timeout, err := cmd.Flags().GetInt64("timeout")
+		if err != nil {
+			log.Fatalf("error - %s", err.Error())
+		}
+
 		pattern, err := cmd.Flags().GetString("regex")
 		if err != nil {
 			log.Fatalf("error - %s", err.Error())
@@ -100,10 +105,10 @@ Example:
 
 			if pattern != "" {
 				if regex.MatchString(line) {
-					call(url, line, headersMap, body, subStringSuccessBody)
+					call(url, line, headersMap, body, subStringSuccessBody, timeout)
 				}
 			} else {
-				call(url, line, headersMap, body, subStringSuccessBody)
+				call(url, line, headersMap, body, subStringSuccessBody, timeout)
 			}
 		}
 
@@ -119,9 +124,9 @@ func replaceData(data string, fileLineText string) string {
 	return strings.ReplaceAll(data, "{{.fuzz}}", fileLineText)
 }
 
-func call(url string, line string, headersMap map[string]string, body string, subStringSuccessBody string) {
+func call(url string, line string, headersMap map[string]string, body string, subStringSuccessBody string, timeout int64) {
 	fmt.Println("try for " + line)
-	client := httpclient.NewHttpClient(url, headersMap)
+	client := httpclient.NewHttpClient(url, headersMap, timeout)
 	httpStatus := httpclient.HttpResp{}
 	if body != "" {
 		httpStatus = client.Post(body)
@@ -145,7 +150,8 @@ func init() {
 	fuzzingCmd.Flags().String("file", "", "File name used for fuzzing")
 	fuzzingCmd.Flags().String("url", "", "Url to make call")
 	fuzzingCmd.Flags().StringArrayVar(&headerArray, "header", []string{}, "Headers. Pass mutiple headers like --header 'Cookie: auth_token=test' --header  'Content-Type: application/x-www-form-urlencoded'")
-	fuzzingCmd.Flags().String("regex", "", "Regex in fuzzing file line")
+	fuzzingCmd.Flags().String("regex", "", "Regex to filter text to request in fuzzing file")
 	fuzzingCmd.Flags().String("subStringSuccessBody", "", "Success body sub string to stop. By default 200 status code would stop. But if you want to add extra check to validate the substring of successBody.")
 	fuzzingCmd.Flags().String("body", "", "Body for post")
+	fuzzingCmd.Flags().Int64("timeout", 3, "Timeout in seconds for a request")
 }
