@@ -59,3 +59,4 @@ Fuzzing is a tool which injects random data into different protocol stacks. Fuzz
 ### Fuzzing file references 
 1. https://github.com/danielmiessler/SecLists/
 2. https://github.com/Bo0oM/fuzz.txt/blob/master/fuzz.txt
+3. https://github.com/praetorian-inc/Hob0Rules/blob/master/wordlists/rockyou.txt.gz
